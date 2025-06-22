@@ -1,5 +1,6 @@
 package org.example;
 import java.sql.*;
+//package com.insurance;
 
 public class Main {
     public static void main(String[] args){
