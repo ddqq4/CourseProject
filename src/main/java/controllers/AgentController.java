@@ -1,5 +1,4 @@
 package controllers;
-
 import main.Main;
 import models.Agent;
 import java.sql.*;
@@ -10,11 +9,9 @@ public class AgentController {
     public List<Agent> getAllAgents() {
         List<Agent> agents = new ArrayList<>();
         String query = "SELECT * FROM Agents";
-
         try (Connection conn = Main.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
-
             while (rs.next()) {
                 Agent agent = new Agent();
                 agent.setAgentId(rs.getInt("agent_id"));
@@ -32,18 +29,14 @@ public class AgentController {
         }
         return agents;
     }
-
     public double calculateCommission(int agentId) {
         String query = "SELECT SUM(amount * tariff_rate * commission_rate / 100) as commission " +
                 "FROM Contracts c JOIN Agents a ON c.agent_id = a.agent_id " +
                 "WHERE c.agent_id = ?";
-
         try (Connection conn = Main.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
-
             stmt.setInt(1, agentId);
             ResultSet rs = stmt.executeQuery();
-
             if (rs.next()) {
                 return rs.getDouble("commission");
             }
