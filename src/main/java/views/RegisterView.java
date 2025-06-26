@@ -128,8 +128,8 @@ public class RegisterView extends Application {
     private ToggleButton createToggleButton(String text, ToggleGroup group) {
         ToggleButton button = new ToggleButton(text);
         button.setToggleGroup(group);
-        button.setStyle("-fx-font-size: 14px; -fx-pref-width: 120px; -fx-pref-height: 35px;");
-        button.setStyle("-fx-background-color: #ecf0f1; -fx-border-color: #bdc3c7; -fx-border-radius: 5;");
+        button.setStyle(button.getStyle() + "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);");
+        button.setStyle(button.getStyle() + "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);");
         button.selectedProperty().addListener((obs, oldVal, newVal) -> {
             button.setStyle(newVal ? "-fx-background-color: #3498db; -fx-text-fill: white;" : "-fx-background-color: #ecf0f1; -fx-text-fill: black;");
         });
@@ -149,7 +149,7 @@ public class RegisterView extends Application {
         combo.setStyle("-fx-font-size: 14px; -fx-pref-height: 35px; -fx-background-radius: 5px;");
     }
     private void styleRegisterButton(Button button) {
-        button.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white; " + "-fx-background-color: #2ecc71; -fx-pref-width: 250px; -fx-pref-height: 45px; " + "-fx-background-radius: 5px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);");
+        button.setStyle(button.getStyle() + "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);");
         button.setOnMouseEntered(e -> button.setStyle(button.getStyle() + "-fx-background-color: #27ae60;"));
         button.setOnMouseExited(e -> button.setStyle(button.getStyle() + "-fx-background-color: #2ecc71;"));
     }
@@ -191,11 +191,15 @@ public class RegisterView extends Application {
                 statusLabel.setText("Выберите филиал!");
                 return;
             }
+
             Agent agent = new Agent();
             agent.setLastName(lastName);
             agent.setFirstName(firstName);
-            agent.setMiddleName(middleName); // Добавлено отчество
+            agent.setMiddleName(middleName);
             agent.setPhone(phone);
+            agent.setSalary(0.0);
+            agent.setCommissionRate(0.05); // Комиссия по умолчанию 5%
+
             AuthController authController = new AuthController();
             if (authController.registerAgent(agent, password, branch.getBranchId())) {
                 showSuccess(statusLabel, "Агент успешно зарегистрирован!");

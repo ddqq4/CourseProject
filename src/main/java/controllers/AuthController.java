@@ -81,18 +81,24 @@ public class AuthController {
         }
     }
     public boolean registerAgent(Agent agent, String password, int branchId) {
-        String insertAgentSQL = "INSERT INTO Agents (branch_id, last_name, first_name, phone) VALUES (?, ?, ?, ?)";
+        String insertAgentSQL = "INSERT INTO Agents (branch_id, last_name, first_name, phone, salary, commission_rate) VALUES (?, ?, ?, ?, ?, ?)";
         String insertUserSQL = "INSERT INTO Users (phone, password, agent_id) VALUES (?, ?, ?)";
+
         try (Connection conn = Main.getConnection()) {
             conn.setAutoCommit(false);
+
             try (PreparedStatement agentStmt = conn.prepareStatement(insertAgentSQL, Statement.RETURN_GENERATED_KEYS)) {
                 agentStmt.setInt(1, branchId);
                 agentStmt.setString(2, agent.getLastName());
                 agentStmt.setString(3, agent.getFirstName());
                 agentStmt.setString(4, agent.getPhone());
+                agentStmt.setDouble(5, 0.0); // Начальная зарплата = 0
+                agentStmt.setDouble(6, 0.05); // Комиссия по умолчанию 5%
+
                 if (agentStmt.executeUpdate() == 0) {
                     throw new SQLException("Создание агента не удалось");
                 }
+
                 int agentId;
                 try (ResultSet generatedKeys = agentStmt.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
@@ -101,12 +107,14 @@ public class AuthController {
                         throw new SQLException("Не удалось получить ID агента");
                     }
                 }
+
                 try (PreparedStatement userStmt = conn.prepareStatement(insertUserSQL)) {
                     userStmt.setString(1, agent.getPhone());
                     userStmt.setString(2, password);
                     userStmt.setInt(3, agentId);
                     userStmt.executeUpdate();
                 }
+
                 conn.commit();
                 return true;
             } catch (SQLException e) {

@@ -67,20 +67,28 @@ public class ClientView extends Application {
         grid.setPadding(new Insets(15));
         grid.setVgap(10);
         grid.setHgap(10);
+
         Label header = new Label("Оформление договора");
         header.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
         grid.add(header, 0, 0, 2, 1);
+
+        // Дата договора
+        TextField dateField = createTextField();
+        dateField.setPromptText("гггг-мм-дд");
+        addFormRow(grid, "Дата договора:", dateField, 1);
+
         AgentController agentController = new AgentController();
         ComboBox<Agent> agentCombo = new ComboBox<>();
         agentCombo.setItems(FXCollections.observableArrayList(agentController.getAllAgents()));
         agentCombo.setConverter(new StringConverter<Agent>() {
             @Override
             public String toString(Agent agent) {
-                return agent != null ? agent.getLastName() + " " + agent.getFirstName() + " " + agent.getMiddleName() : "";
+                return agent != null ? agent.getLastName() + " " + agent.getFirstName() + " (" + agent.getCommissionRate() + "%)" : "";
             }
             @Override
             public Agent fromString(String string) { return null; }
         });
+
         ComboBox<String> typeCombo = new ComboBox<>(FXCollections.observableArrayList(
                 "Автострахование", "Медицинское", "Имущество"));
         TextField amountField = createTextField();
@@ -88,12 +96,14 @@ public class ClientView extends Application {
         Button submitBtn = createButton("Оформить", "#3498db");
         Label statusLabel = new Label();
         statusLabel.setStyle("-fx-text-fill: #e74c3c;");
-        addFormRow(grid, "Агент:", agentCombo, 1);
-        addFormRow(grid, "Тип страхования:", typeCombo, 2);
-        addFormRow(grid, "Сумма:", amountField, 3);
-//        addFormRow(grid, "Тарифная ставка (%):", tariffField, 4);
-        grid.add(submitBtn, 1, 5);
-        grid.add(statusLabel, 1, 6);
+
+        addFormRow(grid, "Агент:", agentCombo, 2);
+        addFormRow(grid, "Тип страхования:", typeCombo, 3);
+        addFormRow(grid, "Сумма:", amountField, 4);
+        addFormRow(grid, "Тарифная ставка (%):", tariffField, 5);
+        grid.add(submitBtn, 1, 6);
+        grid.add(statusLabel, 1, 7);
+
         submitBtn.setOnAction(e -> {
             try {
                 Agent selectedAgent = agentCombo.getValue();
@@ -101,13 +111,15 @@ public class ClientView extends Application {
                     statusLabel.setText("Выберите агента");
                     return;
                 }
+
                 Contract contract = new Contract();
                 contract.setClientId(clientId);
                 contract.setAgentId(selectedAgent.getAgentId());
                 contract.setInsuranceType(typeCombo.getValue());
                 contract.setAmount(Double.parseDouble(amountField.getText()));
-                contract.setTariffRate(Double.parseDouble(tariffField.getText()));
-                contract.setContractDate(LocalDate.now());
+                contract.setTariffRate(Double.parseDouble(tariffField.getText()) / 100); // Переводим проценты в долю
+                contract.setContractDate(LocalDate.parse(dateField.getText()));
+
                 if (contractController.createContract(contract)) {
                     stage.close();
                     refreshContracts();
@@ -116,9 +128,11 @@ public class ClientView extends Application {
                 }
             } catch (Exception ex) {
                 statusLabel.setText("Проверьте правильность введенных данных");
+                ex.printStackTrace();
             }
         });
-        Scene scene = new Scene(grid, 400, 300);
+
+        Scene scene = new Scene(grid, 400, 350);
         stage.setScene(scene);
         stage.show();
     }

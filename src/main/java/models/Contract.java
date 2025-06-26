@@ -8,6 +8,7 @@ public class Contract {
     private LocalDate contractDate;
     private double amount;
     private double tariffRate;
+    private double insurancePayment;
 
     public int getContractId() {
         return contractId;
@@ -50,5 +51,11 @@ public class Contract {
     }
     public void setTariffRate(double tariffRate) {
         this.tariffRate = tariffRate;
+    }
+    public double getInsurancePayment() {
+        return insurancePayment;
+    }
+    public void setInsurancePayment (double insurancePayment) {
+        this.insurancePayment = insurancePayment;
     }
 }
