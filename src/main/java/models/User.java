@@ -4,7 +4,7 @@ public class User {
     private int userId;
     private String phone;
     private String password;
-    private String role; // "agent" или "client"
+    private String role;
     private Integer agentId;
     private Integer clientId;
 

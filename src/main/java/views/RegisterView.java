@@ -95,7 +95,7 @@ public class RegisterView extends Application {
                 registerAgent(
                         lastNameField.getText().trim(),
                         firstNameField.getText().trim(),
-                        middleNameField.getText().trim(), // Добавлено отчество
+                        middleNameField.getText().trim(),
                         phoneField.getText().trim(),
                         passwordField.getText(),
                         branchCombo.getValue(),
@@ -105,7 +105,7 @@ public class RegisterView extends Application {
                 registerClient(
                         lastNameField.getText().trim(),
                         firstNameField.getText().trim(),
-                        middleNameField.getText().trim(), // Добавлено отчество
+                        middleNameField.getText().trim(),
                         phoneField.getText().trim(),
                         addressField.getText().trim(),
                         passwordField.getText(),
@@ -121,7 +121,7 @@ public class RegisterView extends Application {
                 registerButton,
                 statusLabel
         );
-        Scene scene = new Scene(mainContainer, 550, 750); // Увеличена высота для отчества
+        Scene scene = new Scene(mainContainer, 550, 750);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -211,7 +211,7 @@ public class RegisterView extends Application {
             Client client = new Client();
             client.setLastName(lastName);
             client.setFirstName(firstName);
-            client.setMiddleName(middleName); // Добавлено отчество
+            client.setMiddleName(middleName);
             client.setPhone(phone);
             client.setAddress(address);
             AuthController authController = new AuthController();

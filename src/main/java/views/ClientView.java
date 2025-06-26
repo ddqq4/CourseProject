@@ -18,9 +18,7 @@ public class ClientView extends Application {
     private ClientController clientController;
     private ContractController contractController;
     private TableView<Contract> contractTable;
-    public ClientView() {
-        this(0);
-    }
+
     public ClientView(int clientId) {
         this.clientId = clientId;
         this.clientController = new ClientController();
@@ -58,9 +56,7 @@ public class ClientView extends Application {
     }
     private Button createButton(String text, String color) {
         Button button = new Button(text);
-        button.setStyle("-fx-font-size: 14px; -fx-text-fill: white; " +
-                "-fx-background-color: " + color + "; " +
-                "-fx-pref-width: 150px; -fx-pref-height: 35px;");
+        button.setStyle("-fx-font-size: 14px; -fx-text-fill: white; " + "-fx-background-color: " + color + "; " + "-fx-pref-width: 150px; -fx-pref-height: 35px;");
         return button;
     }
     private void showContractForm(Stage owner) {
@@ -95,7 +91,7 @@ public class ClientView extends Application {
         addFormRow(grid, "Агент:", agentCombo, 1);
         addFormRow(grid, "Тип страхования:", typeCombo, 2);
         addFormRow(grid, "Сумма:", amountField, 3);
-        addFormRow(grid, "Тарифная ставка (%):", tariffField, 4);
+//        addFormRow(grid, "Тарифная ставка (%):", tariffField, 4);
         grid.add(submitBtn, 1, 5);
         grid.add(statusLabel, 1, 6);
         submitBtn.setOnAction(e -> {

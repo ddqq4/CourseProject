@@ -22,9 +22,7 @@ public class AgentView extends Application {
     private AgentController agentController;
     private ClientController clientController;
     private TableView<Client> clientTable;
-    public AgentView() {
-        this(null);
-    }
+
     public AgentView(Integer agentId) {
         this.agentId = agentId;
         this.agentController = new AgentController();
@@ -150,8 +148,7 @@ public class AgentView extends Application {
         PasswordField passwordField = createFormPasswordField();
         passwordField.setPromptText("Оставьте пустым, если не меняется");
         Button saveBtn = new Button("Сохранить");
-        saveBtn.setStyle("-fx-font-size: 14px; -fx-background-color: #3498db; -fx-text-fill: white; " +
-                "-fx-pref-width: 120px; -fx-pref-height: 35px; -fx-background-radius: 5px;");
+        saveBtn.setStyle("-fx-font-size: 14px; -fx-background-color: #3498db; -fx-text-fill: white; " + "-fx-pref-width: 120px; -fx-pref-height: 35px; -fx-background-radius: 5px;");
         Label statusLabel = new Label();
         statusLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-size: 13px;");
         grid.add(createFormLabel("Фамилия:"), 0, 1);
@@ -170,8 +167,7 @@ public class AgentView extends Application {
             agent.setPhone(phoneField.getText());
             boolean success = authController.updateAgent(agent);
             if (!passwordField.getText().isEmpty()) {
-                success &= authController.updateUserPassword(authController.getUser(agent.getPhone()).getUserId(), passwordField.getText()
-                );
+                success &= authController.updateUserPassword(authController.getUser(agent.getPhone()).getUserId(), passwordField.getText());
             }
             if (success) {
                 statusLabel.setText("Данные успешно обновлены!");
