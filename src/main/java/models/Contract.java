@@ -1,14 +1,17 @@
 package models;
+
 import java.time.LocalDate;
+
 public class Contract {
     private int contractId;
     private int clientId;
     private int agentId;
-    private String insuranceType;
+    private Integer typeId;
     private LocalDate contractDate;
     private double amount;
     private double tariffRate;
-    private double insurancePayment;
+    private Double insurancePayment;
+    private InsuranceType insuranceType;
 
     public int getContractId() {
         return contractId;
@@ -28,11 +31,11 @@ public class Contract {
     public void setAgentId(int agentId) {
         this.agentId = agentId;
     }
-    public String getInsuranceType() {
-        return insuranceType;
+    public Integer getTypeId() {
+        return typeId;
     }
-    public void setInsuranceType(String insuranceType) {
-        this.insuranceType = insuranceType;
+    public void setTypeId(Integer typeId) {
+        this.typeId = typeId;
     }
     public LocalDate getContractDate() {
         return contractDate;
@@ -52,10 +55,17 @@ public class Contract {
     public void setTariffRate(double tariffRate) {
         this.tariffRate = tariffRate;
     }
-    public double getInsurancePayment() {
+    public Double getInsurancePayment() {
         return insurancePayment;
     }
-    public void setInsurancePayment (double insurancePayment) {
+    public void setInsurancePayment(Double insurancePayment) {
         this.insurancePayment = insurancePayment;
+    }
+    public InsuranceType getInsuranceType() {
+        return insuranceType;
+    }
+    public void setInsuranceType(InsuranceType insuranceType) {
+        this.insuranceType = insuranceType;
+        this.typeId = (insuranceType != null) ? insuranceType.getTypeId() : null;
     }
 }

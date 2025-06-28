@@ -1,4 +1,5 @@
 package controllers;
+
 import main.Main;
 import models.Client;
 import models.Contract;
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientController {
+
     public Client getClientById(int clientId) {
         String query = "SELECT * FROM Clients WHERE client_id = ?";
         try (Connection conn = Main.getConnection();
@@ -28,28 +30,11 @@ public class ClientController {
         }
         return null;
     }
+
     public List<Contract> getClientContracts(int clientId) {
-        List<Contract> contracts = new ArrayList<>();
-        String query = "SELECT * FROM Contracts WHERE client_id = ?";
-        try (Connection conn = Main.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, clientId);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                Contract contract = new Contract();
-                contract.setContractId(rs.getInt("contract_id"));
-                contract.setClientId(rs.getInt("client_id"));
-                contract.setAgentId(rs.getInt("agent_id"));
-                contract.setInsuranceType(rs.getString("insurance_type"));
-                contract.setAmount(rs.getDouble("amount"));
-                contract.setTariffRate(rs.getDouble("tariff_rate"));
-                contracts.add(contract);
-            }
-        } catch (SQLException e) {
-            System.out.println("Ошибка загрузки договоров: " + e.getMessage());
-        }
-        return contracts;
+        return new ContractController().getContractsByClientId(clientId);
     }
+
     public List<Client> getAllClients() {
         List<Client> clients = new ArrayList<>();
         String query = "SELECT * FROM Clients";
@@ -70,5 +55,35 @@ public class ClientController {
             System.out.println("Ошибка загрузки клиентов: " + e.getMessage());
         }
         return clients;
+    }
+
+    public boolean deleteClient(int clientId) {
+        String query = "DELETE FROM Clients WHERE client_id = ?";
+
+        try (Connection conn = Main.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, clientId);
+            int affectedRows = stmt.executeUpdate();
+
+            // Если клиент удален, удаляем связанного пользователя
+            if (affectedRows > 0) {
+                deleteUserByClientId(conn, clientId);
+                return true;
+            }
+            return false;
+
+        } catch (SQLException e) {
+            System.out.println("Ошибка удаления клиента: " + e.getMessage());
+            return false;
+        }
+    }
+
+    private void deleteUserByClientId(Connection conn, int clientId) throws SQLException {
+        String query = "DELETE FROM Users WHERE client_id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, clientId);
+            stmt.executeUpdate();
+        }
     }
 }
